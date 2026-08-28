@@ -8,6 +8,7 @@ import { runInit } from "./init.js";
 import { runObserve } from "./observe-cmd.js";
 import { runUninstall } from "./uninstall.js";
 import { runCacheHook } from "./cache-hook.js";
+import { runCacheServer } from "./cache-serve.js";
 import { extractCursorFilePath } from "./cursor.js";
 import { runStdioServer } from "./memory/server.js";
 import { formatReviewHint } from "./memory/review-hint.js";
@@ -135,6 +136,12 @@ async function main(): Promise<void> {
       }
       process.exit(args.quiet ? 0 : 1);
     }
+  }
+
+  if (args.command === "cache-serve") {
+    // Runs until stdin closes (the client disconnects) — do not process.exit here.
+    runCacheServer();
+    return;
   }
 
   if (args.command === "memory") {

@@ -1,7 +1,7 @@
 import { DEFAULT_WINDOW_MONTHS } from "./analyze.js";
 
 export type CliArgs = {
-  command: "sync" | "init" | "observe" | "uninstall" | "memory" | "cache-hook" | null;
+  command: "sync" | "init" | "observe" | "uninstall" | "memory" | "cache-hook" | "cache-serve" | null;
   memorySubcommand: "serve" | "review-hint" | null;
   staleAfterDays: number | null;
   dryRun: boolean;
@@ -26,7 +26,7 @@ export type CliArgs = {
 
 export function parseArgs(argv: string[]): CliArgs {
   const args = argv.slice(2);
-  let command: "sync" | "init" | "observe" | "uninstall" | "memory" | "cache-hook" | null = null;
+  let command: "sync" | "init" | "observe" | "uninstall" | "memory" | "cache-hook" | "cache-serve" | null = null;
   let memorySubcommand: "serve" | "review-hint" | null = null;
   let staleAfterDays: number | null = null;
   let dryRun = false;
@@ -157,7 +157,8 @@ export function parseArgs(argv: string[]): CliArgs {
         a === "observe" ||
         a === "uninstall" ||
         a === "memory" ||
-        a === "cache-hook"
+        a === "cache-hook" ||
+        a === "cache-serve"
       ) {
         command = a;
         continue;

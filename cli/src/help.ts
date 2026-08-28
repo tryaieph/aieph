@@ -10,6 +10,7 @@ Usage:
   aieph memory serve [--cwd <path>]
   aieph memory review-hint [--cwd <path>] [--stale-after-days <n>]
   aieph cache-hook
+  aieph cache-serve [--cwd <path>]
 
 Options:
   --dry-run         Print .aieph/versions.md to stdout; do not write
@@ -45,6 +46,11 @@ Options:
                     the way (fail-open) on any miss/timeout/error. Registered
                     automatically by \`aieph init --claude-code\`; reads the hook
                     JSON on stdin. Env: AIEPH_API_BASE, LOOKUP_TIMEOUT_MS.
+  cache-serve       Local stdio MCP server exposing one tool, cache_lookup, for
+                    clients that can't intercept web search via a hook (e.g.
+                    Cursor): the agent calls it before searching and gets a
+                    cached answer on a hit. Registered for Cursor by
+                    \`aieph init --cursor\`. Env: AIEPH_API_BASE, LOOKUP_TIMEOUT_MS.
 
 Note: git hooks installed by \`aieph init\` run with --quiet --no-write --send.
 経路: hook=イベントのみ / 手動=書き込み+イベント / CI=check のみ

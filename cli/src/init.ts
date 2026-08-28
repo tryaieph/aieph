@@ -18,6 +18,8 @@ import {
 import {
   installCursorMemoryMcp,
   uninstallCursorMemoryMcp,
+  installCursorCacheMcp,
+  uninstallCursorCacheMcp,
 } from "./memory/register-cursor.js";
 
 export const HOOK_START = "# aieph:start";
@@ -158,6 +160,7 @@ export async function runInit(opts: InitOptions): Promise<void> {
     if (opts.cursor) {
       await uninstallCursorHooks(opts.cwd);
       await uninstallCursorMemoryMcp(homeDir);
+      await uninstallCursorCacheMcp(homeDir);
     }
     return;
   }
@@ -171,6 +174,7 @@ export async function runInit(opts: InitOptions): Promise<void> {
   if (opts.cursor) {
     await installCursorHooks(opts.cwd);
     await installCursorMemoryMcp(homeDir);
+    await installCursorCacheMcp(homeDir);
     memoryClients.push("Cursor (~/.cursor/mcp.json)");
   }
   const cfg = await ensureAiephConfig(opts.cwd);
@@ -188,6 +192,17 @@ export async function runInit(opts: InitOptions): Promise<void> {
     out(
       "aieph-memory: SessionStart hook installed — Claude Code will see a hint at the start of the " +
         "next session if any memory hasn't been re-verified against the repo in 7+ days.",
+    );
+    out(
+      "aieph-cache: shared-cache PreToolUse hook installed for Claude Code — WebSearch/WebFetch will " +
+        "check the cache first (fail-open).",
+    );
+  }
+  if (opts.cursor) {
+    out(
+      "aieph-cache: shared-cache MCP (cache-serve) registered for Cursor. Add a Cursor rule such as " +
+        '"Before using web search, call the aieph cache_lookup tool first" so the agent checks the ' +
+        "cache; then restart Cursor to connect.",
     );
   }
 }
