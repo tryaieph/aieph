@@ -1,42 +1,67 @@
 # aieph
 
-*Your fix, everyone's gain* 🌱
+*your fix, everyone's gain*
 
-**aieph** is a shared cache of answers for AI coding assistants. When one
-developer's assistant works something out — a fix, an error's meaning, the way a
-library really behaves — that answer can quietly help the next person, and
-future you, instead of everyone paying to figure out the same thing all over
-again.
+aieph is a shared answer cache for AI coding assistants.
 
-This repository is how you plug in.
+When an AI coding assistant is about to search the web, a small hook can quietly
+ask: *"Does someone already have the answer?"*
 
-## How it helps, in practice
+If the answer is already in the shared cache, aieph can return it right away —
+avoiding another trip to the web. If there is no answer, aieph simply gets out
+of the way.
 
-Your assistant reaches for the web fairly often — a `WebSearch` here, a
-`WebFetch` there. The little hook in this repo sits just in front of those
-moments:
+MISS, timeout, or error? Nothing breaks. The original request continues as
+usual. That is the whole idea.
 
-- Before the search goes out, it gently asks the shared aieph cache whether a
-  good answer is already known.
-- If one is, the cache hands it straight back and the web trip is skipped —
-  you get the answer without spending a fresh round of searching on it.
-- If nothing matches, or the cache is even a touch slow, the hook simply steps
-  aside and your assistant carries on exactly as it would have. It only ever
-  helps; it never gets in the way.
+Your fix can become everyone's gain.
 
-That last part matters, so it's worth saying plainly: the hook is **fail-open**.
-Any timeout, hiccup, or miss means your original tool call runs untouched.
+## Why a shared cache?
 
-## Adding it to Claude Code
+AI coding assistants often look up the same kinds of things:
 
-First, you can bring the files onto your machine wherever you like:
+- a familiar error message
+- a library's behavior
+- a configuration detail
+- a solution someone has already found
+
+The first person does the searching. The next person doesn't necessarily need
+to. aieph gives those answers a place to be shared, and as more people use it,
+the cache can gradually become more useful.
+
+It's still early, so a cache hit is not guaranteed. Sometimes aieph simply won't
+have the answer yet — and that's perfectly fine.
+
+## How it feels
+
+```text
+AI assistant
+     │
+     │  "I'm about to search..."
+     ▼
+   aieph
+     │
+     ├── HIT  → answer is already here
+     │
+     └── MISS / timeout / error
+              │
+              ▼
+          original search
+```
+
+aieph is designed to stay out of the way. There is no need to change how you
+work when the cache doesn't have something useful.
+
+## Getting started with Claude Code
+
+Claude Code can use aieph with a single `PreToolUse` hook for `WebSearch` and
+`WebFetch`. A small setup looks like this:
 
 ```bash
 git clone https://github.com/tryaieph/aieph.git
 ```
 
-Then, whenever you feel ready, you can point Claude Code at the hook by adding
-this to your `~/.claude/settings.json` (Node 18+ is all it needs):
+Then, in `~/.claude/settings.json`, the relevant hook can look like:
 
 ```json
 {
@@ -45,7 +70,10 @@ this to your `~/.claude/settings.json` (Node 18+ is all it needs):
       {
         "matcher": "WebSearch|WebFetch",
         "hooks": [
-          { "type": "command", "command": "node /absolute/path/to/aieph/hook/aieph-cache.mjs" }
+          {
+            "type": "command",
+            "command": "node /path/to/aieph/hook/aieph-cache.mjs"
+          }
         ]
       }
     ]
@@ -53,35 +81,50 @@ this to your `~/.claude/settings.json` (Node 18+ is all it needs):
 }
 ```
 
-That's the whole setup — no keys, no account, nothing to sign up for. If you'd
-ever like to point it somewhere else, `AIEPH_API_BASE` and `LOOKUP_TIMEOUT_MS`
-are there for you, but the defaults are meant to just work.
+That's it.
 
-*(Cursor support is on the way — for now the hook is tuned for Claude Code.)*
+Requirements: Node.js 18+. No account or API key is required.
 
-## If you ever want to remove it
+Optional environment variables:
 
-No hard feelings — you can simply take that `PreToolUse` block back out of your
-`settings.json`, and delete the clone if you'd like. Nothing else is left
-behind.
+```text
+AIEPH_API_BASE
+LOOKUP_TIMEOUT_MS
+```
 
-## A gentle note on what's shared
+Cursor support is being prepared.
 
-To look an answer up, the text of your search query is sent to the aieph cache
-so it can look for a match — that's the whole trick, and it's the only thing
-that leaves your machine here. There are no accounts, and a miss changes
-nothing about how your assistant works. The cache is still young and growing, so
-plenty of searches won't have a match yet; that's expected, and those simply
-pass through.
+## Removing aieph
 
-## A small bonus: local memory
+If aieph is no longer useful for you, removing the `PreToolUse` block is enough
+to return to the original setup.
 
-Alongside the cache, the [`cli/`](cli/) folder holds the `aieph` command-line
-tool, which gives the assistants you already use a gentle **local** memory —
-write a fact once, and any connected assistant can recall it later. It lives
-entirely on your own machine. There's more about it in
-[`cli/README.md`](cli/README.md).
+## What gets sent?
+
+aieph is intentionally simple and transparent. Only the search query text is
+sent for matching. Nothing else is sent. There is no account to create and no
+personal profile to maintain. When there is no matching answer, the request
+passes through normally.
+
+## Local shared memory
+
+aieph also includes a small local-only memory CLI in [`cli/`](cli/). It is
+separate from the shared answer cache. The idea is simple: write a fact once,
+and let connected assistants remember it later. This memory stays completely
+local.
+
+## Early days, honest expectations
+
+aieph is still growing. The shared cache is young, so there will be plenty of
+moments when it doesn't have an answer yet. That's intentional: aieph never
+needs to be perfect to be useful. A miss should feel exactly like there was no
+cache at all.
+
+Over time, every useful answer someone discovers has the potential to help the
+next person.
+
+*your fix, everyone's gain.*
 
 ## License
 
-Released under the MIT License — please use it in whatever way helps you most.
+MIT
