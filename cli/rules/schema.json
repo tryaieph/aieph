@@ -1,0 +1,175 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://aieph.dev/schemas/migration-rules.json",
+  "title": "AIEPH migration rule set",
+  "description": "Locally matchable breaking-change rules for a single package major migration.",
+  "type": "object",
+  "required": [
+    "migration_id",
+    "guide_url",
+    "semantic_only_count",
+    "package",
+    "from_major",
+    "to_major",
+    "rules"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "migration_id": {
+      "type": "string",
+      "description": "Stable migration pair id, e.g. wrangler-3-to-4."
+    },
+    "guide_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Official migration guide URL."
+    },
+    "semantic_only_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count of class-C (semantic-only) items from RULE_FEASIBILITY for this pair."
+    },
+    "package": {
+      "type": "string",
+      "description": "npm package name this migration applies to."
+    },
+    "from_major": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Major version that still uses the old patterns."
+    },
+    "to_major": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Target major that removes or renames the patterns."
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/rule" }
+    }
+  },
+  "definitions": {
+    "rule": {
+      "type": "object",
+      "required": [
+        "id",
+        "package",
+        "from_major",
+        "to_major",
+        "kind",
+        "files",
+        "detect",
+        "message",
+        "source_url",
+        "pattern_version"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9@/_.-]+:[0-9]+->[0-9]+:[a-z0-9-]+$",
+          "description": "Stable id: <package>:<from>-><to>:<slug>. Never hash-derived; never reuse."
+        },
+        "package": { "type": "string" },
+        "from_major": { "type": "integer", "minimum": 0 },
+        "to_major": { "type": "integer", "minimum": 0 },
+        "kind": {
+          "type": "string",
+          "enum": ["config", "source"],
+          "description": "config for A-class (config/manifest); source for B-class (source/scripts)."
+        },
+        "fix_hint": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Short local note (optional; legacy)."
+        },
+        "fix": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional 1–2 sentence rewrite knowledge for versions.md (descriptive; not imperative)."
+        },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Filename patterns to scan (exact name or * glob)."
+        },
+        "detect": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": ["type", "value"],
+              "additionalProperties": false,
+              "properties": {
+                "type": { "const": "regex" },
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "JavaScript RegExp source (no flags; matcher applies m)."
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": ["type", "path"],
+              "additionalProperties": false,
+              "properties": {
+                "type": { "enum": ["toml_key", "json_key"] },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Dot-separated key path, e.g. coverage.ignoreEmptyLines."
+                }
+              }
+            }
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "description": "1–2 sentences for the agent: what changed and what to do."
+        },
+        "source_url": { "type": "string", "format": "uri" },
+        "pattern_version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Bump when detect changes; id stays stable."
+        }
+      }
+    },
+    "fixtureFile": {
+      "type": "object",
+      "required": ["migration_id", "package", "from_major", "to_major", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "migration_id": { "type": "string" },
+        "package": { "type": "string" },
+        "from_major": { "type": "integer" },
+        "to_major": { "type": "integer" },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "positive", "negative"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "positive": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string", "minLength": 1 }
+              },
+              "negative": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

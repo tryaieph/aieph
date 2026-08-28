@@ -1,0 +1,177 @@
+{
+  "migration_id": "vite-7-to-8",
+  "package": "vite",
+  "from_major": 7,
+  "to_major": 8,
+  "items": [
+    {
+      "id": "vite:7->8:esbuild-supported",
+      "positive": [
+        "esbuild: {\n  supported: {\n    'top-level-await': false\n  }\n}"
+      ],
+      "negative": [
+        "oxc: {\n  // no supported map\n}",
+        "esbuild: {\n  target: 'esnext'\n}"
+      ]
+    },
+    {
+      "id": "vite:7->8:property-mangling",
+      "positive": [
+        "esbuild: { mangleProps: /^_/ }",
+        "minify: { mangleCache: cache }"
+      ],
+      "negative": [
+        "esbuild: { target: 'es2015' }",
+        "build: { minify: 'esbuild' }"
+      ]
+    },
+    {
+      "id": "vite:7->8:rollup-watch-chokidar",
+      "positive": [
+        "build: {\n  rollupOptions: {\n    watch: {\n      chokidar: { ignoreInitial: true }\n    }\n  }\n}"
+      ],
+      "negative": [
+        "build: {\n  rollupOptions: {\n    input: 'src/main.js'\n  }\n}",
+        "chokidar.watch('src')"
+      ]
+    },
+    {
+      "id": "vite:7->8:manual-chunks-object",
+      "positive": [
+        "manualChunks: {\n  vendor: ['react', 'react-dom']\n}"
+      ],
+      "negative": [
+        "manualChunks(id) {\n  if (id.includes('node_modules')) return 'vendor'\n}",
+        "manualChunks: (id) => id.includes('node_modules') ? 'vendor' : undefined"
+      ]
+    },
+    {
+      "id": "vite:7->8:commonjs-options",
+      "positive": [
+        "build: {\n  commonjsOptions: { include: [/node_modules/] }\n}"
+      ],
+      "negative": [
+        "build: {\n  target: 'esnext'\n}",
+        "optimizeDeps: { include: ['lodash'] }"
+      ]
+    },
+    {
+      "id": "vite:7->8:dynamic-import-vars-warn-on-error",
+      "positive": [
+        "dynamicImportVarsOptions: {\n  warnOnError: true\n}"
+      ],
+      "negative": [
+        "dynamicImportVarsOptions: {\n  exclude: [/node_modules/]\n}",
+        "warnOnError: true // unrelated"
+      ]
+    },
+    {
+      "id": "vite:7->8:format-system-amd",
+      "positive": [
+        "format: 'system'",
+        "format: \"amd\""
+      ],
+      "negative": [
+        "format: 'es'",
+        "format: 'umd'"
+      ]
+    },
+    {
+      "id": "vite:7->8:transform-with-esbuild",
+      "positive": [
+        "import { transformWithEsbuild } from 'vite'",
+        "await transformWithEsbuild(code, id)"
+      ],
+      "negative": [
+        "import { transformWithOxc } from 'vite'",
+        "await transformWithOxc(code, id)"
+      ]
+    },
+    {
+      "id": "vite:7->8:build-catch-errors",
+      "positive": [
+        "import { build } from 'vite'\ntry { await build() } catch (e) { console.error(e) }"
+      ],
+      "negative": [
+        "import { build } from 'vite'\ntry { await build() } catch (e) { console.error(e.errors) }"
+      ]
+    },
+    {
+      "id": "vite:7->8:hmr-accept-url",
+      "positive": [
+        "import.meta.hot.accept(new URL('./foo.js', import.meta.url))",
+        "import.meta.hot.accept('https://example.com/mod.js')"
+      ],
+      "negative": [
+        "import.meta.hot.accept('./foo.js')",
+        "import.meta.hot.accept((m) => {})"
+      ]
+    },
+    {
+      "id": "vite:7->8:bundle-index-assign",
+      "positive": [
+        "bundle[fileName] = chunk",
+        "bundle['out.js'] = { type: 'chunk', code }"
+      ],
+      "negative": [
+        "const file = bundle[fileName]",
+        "delete bundle[fileName]"
+      ]
+    },
+    {
+      "id": "vite:7->8:structured-clone-bundle",
+      "positive": [
+        "structuredClone(bundle)",
+        "const copy = structuredClone( bundle )"
+      ],
+      "negative": [
+        "structuredClone(options)",
+        "structuredClone(meta.bundleId)"
+      ]
+    },
+    {
+      "id": "vite:7->8:should-transform-cached-module",
+      "positive": [
+        "shouldTransformCachedModule({ id }) { return true }",
+        "hooks: { shouldTransformCachedModule }"
+      ],
+      "negative": [
+        "transform(code, id) {}",
+        "moduleParsed(info) {}"
+      ]
+    },
+    {
+      "id": "vite:7->8:resolve-import-meta",
+      "positive": [
+        "resolveImportMeta(prop, { moduleId }) {}",
+        "hooks: { resolveImportMeta }"
+      ],
+      "negative": [
+        "resolveId(source) {}",
+        "import.meta.url"
+      ]
+    },
+    {
+      "id": "vite:7->8:render-dynamic-import",
+      "positive": [
+        "renderDynamicImport() { return { left: '(', right: ')' } }",
+        "hooks: { renderDynamicImport }"
+      ],
+      "negative": [
+        "renderChunk(code) {}",
+        "dynamicImportVarsOptions"
+      ]
+    },
+    {
+      "id": "vite:7->8:resolve-file-url",
+      "positive": [
+        "resolveFileUrl({ relativePath }) {}",
+        "hooks: { resolveFileUrl }"
+      ],
+      "negative": [
+        "fileURLToPath(url)",
+        "new URL(import.meta.url)"
+      ]
+    }
+  ]
+}

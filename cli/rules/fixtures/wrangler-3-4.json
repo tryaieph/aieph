@@ -1,0 +1,96 @@
+{
+  "migration_id": "wrangler-3-to-4",
+  "package": "wrangler",
+  "from_major": 3,
+  "to_major": 4,
+  "items": [
+    {
+      "id": "wrangler:3->4:legacy-assets",
+      "positive": [
+        "legacy_assets = { bucket = \"./public\" }",
+        "wrangler deploy --legacy-assets ./dist"
+      ],
+      "negative": [
+        "assets = { directory = \"./public\" }",
+        "wrangler deploy --assets ./dist"
+      ]
+    },
+    {
+      "id": "wrangler:3->4:node-compat",
+      "positive": [
+        "node_compat = true",
+        "wrangler dev --node-compat"
+      ],
+      "negative": [
+        "compatibility_flags = [\"nodejs_compat\"]",
+        "wrangler dev --compatibility-flags nodejs_compat"
+      ]
+    },
+    {
+      "id": "wrangler:3->4:usage-model",
+      "positive": [
+        "usage_model = \"unbound\"",
+        "{\n  \"usage_model\": \"bundled\"\n}"
+      ],
+      "negative": [
+        "name = \"my-worker\"",
+        "{\n  \"name\": \"my-worker\"\n}"
+      ]
+    },
+    {
+      "id": "wrangler:3->4:cli-version",
+      "positive": [
+        "wrangler version",
+        "npx wrangler version"
+      ],
+      "negative": [
+        "wrangler --version",
+        "wrangler -v"
+      ]
+    },
+    {
+      "id": "wrangler:3->4:get-bindings-proxy",
+      "positive": [
+        "import { getBindingsProxy } from 'wrangler'",
+        "const proxy = getBindingsProxy()"
+      ],
+      "negative": [
+        "import { getPlatformProxy } from 'wrangler'",
+        "const proxy = getPlatformProxy()"
+      ]
+    },
+    {
+      "id": "wrangler:3->4:cli-publish",
+      "positive": [
+        "wrangler publish",
+        "npx wrangler publish --env prod"
+      ],
+      "negative": [
+        "wrangler deploy",
+        "npx wrangler deploy --env prod"
+      ]
+    },
+    {
+      "id": "wrangler:3->4:cli-generate",
+      "positive": [
+        "wrangler generate my-app",
+        "npx wrangler generate"
+      ],
+      "negative": [
+        "npm create cloudflare@latest",
+        "npx create-cloudflare@latest"
+      ]
+    },
+    {
+      "id": "wrangler:3->4:pages-publish",
+      "positive": [
+        "wrangler pages publish ./dist",
+        "npx wrangler pages publish"
+      ],
+      "negative": [
+        "wrangler pages deploy ./dist",
+        "npx wrangler pages deploy"
+      ]
+    }
+  ]
+}

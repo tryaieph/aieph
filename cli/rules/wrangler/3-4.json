@@ -1,0 +1,197 @@
+{
+  "migration_id": "wrangler-3-to-4",
+  "package": "wrangler",
+  "from_major": 3,
+  "to_major": 4,
+  "guide_url": "https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-v4/",
+  "semantic_only_count": 3,
+  "rules": [
+    {
+      "id": "wrangler:3->4:legacy-assets",
+      "package": "wrangler",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "wrangler.toml",
+        "wrangler.json",
+        "wrangler.jsonc",
+        "package.json"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "(?:^|[\\s.{,\\[])legacy_assets\\b|--legacy-assets\\b"
+      },
+      "message": "legacy_assets / --legacy-assets was removed in Wrangler 4. Migrate to Workers static assets or Pages assets.",
+      "source_url": "https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-v4/",
+      "pattern_version": 1
+    },
+    {
+      "id": "wrangler:3->4:node-compat",
+      "package": "wrangler",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "wrangler.toml",
+        "wrangler.json",
+        "wrangler.jsonc",
+        "package.json"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "(?:^|[\\s.{,\\[])node_compat\\b|--node-compat\\b"
+      },
+      "message": "node_compat / --node-compat was removed in Wrangler 4. Use the nodejs_compat compatibility flag instead.",
+      "source_url": "https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-v4/",
+      "pattern_version": 1
+    },
+    {
+      "id": "wrangler:3->4:usage-model",
+      "package": "wrangler",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "wrangler.toml",
+        "wrangler.json",
+        "wrangler.jsonc"
+      ],
+      "detect": {
+        "type": "toml_key",
+        "path": "usage_model"
+      },
+      "message": "usage_model was removed in Wrangler 4 (no effect under Workers Standard Pricing). Delete the key.",
+      "source_url": "https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-v4/",
+      "pattern_version": 1
+    },
+    {
+      "id": "wrangler:3->4:cli-version",
+      "package": "wrangler",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "source",
+      "files": [
+        "package.json",
+        "*.sh",
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.md",
+        "Makefile"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bwrangler\\s+version\\b"
+      },
+      "message": "wrangler version was removed in Wrangler 4.",
+      "fix_hint": "use wrangler --version",
+      "source_url": "https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-4/",
+      "pattern_version": 1,
+      "fix": "CLI version is read with `wrangler --version`."
+    },
+    {
+      "id": "wrangler:3->4:get-bindings-proxy",
+      "package": "wrangler",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bgetBindingsProxy\\b"
+      },
+      "message": "getBindingsProxy() was removed in Wrangler 4.",
+      "fix_hint": "use getPlatformProxy()",
+      "source_url": "https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-4/",
+      "pattern_version": 1,
+      "fix": "Local bindings use `getPlatformProxy()`."
+    },
+    {
+      "id": "wrangler:3->4:cli-publish",
+      "package": "wrangler",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "source",
+      "files": [
+        "package.json",
+        "*.sh",
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.md",
+        "Makefile"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bwrangler\\s+publish\\b"
+      },
+      "message": "wrangler publish was removed in Wrangler 4.",
+      "fix_hint": "use wrangler deploy",
+      "source_url": "https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-4/",
+      "pattern_version": 1,
+      "fix": "Deployment uses `wrangler deploy`."
+    },
+    {
+      "id": "wrangler:3->4:cli-generate",
+      "package": "wrangler",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "source",
+      "files": [
+        "package.json",
+        "*.sh",
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.md",
+        "Makefile"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bwrangler\\s+generate\\b"
+      },
+      "message": "wrangler generate was removed in Wrangler 4.",
+      "fix_hint": "use npm create cloudflare@latest",
+      "source_url": "https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-4/",
+      "pattern_version": 1,
+      "fix": "Scaffolding uses `npm create cloudflare@latest`."
+    },
+    {
+      "id": "wrangler:3->4:pages-publish",
+      "package": "wrangler",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "source",
+      "files": [
+        "package.json",
+        "*.sh",
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.md",
+        "Makefile"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bwrangler\\s+pages\\s+publish\\b"
+      },
+      "message": "wrangler pages publish was removed in Wrangler 4.",
+      "fix_hint": "use wrangler pages deploy",
+      "source_url": "https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-4/",
+      "pattern_version": 1,
+      "fix": "Pages deployment uses `wrangler pages deploy`."
+    }
+  ]
+}

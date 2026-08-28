@@ -1,0 +1,478 @@
+{
+  "migration_id": "vitest-3-to-4",
+  "package": "vitest",
+  "from_major": 3,
+  "to_major": 4,
+  "guide_url": "https://vitest.dev/guide/migration.html",
+  "semantic_only_count": 17,
+  "rules": [
+    {
+      "id": "vitest:3->4:coverage-ignore-empty-lines",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bignoreEmptyLines\\b"
+      },
+      "message": "coverage.ignoreEmptyLines was removed in Vitest 4. Delete the option from coverage config.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:coverage-experimental-ast-aware-remapping",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bexperimentalAstAwareRemapping\\b"
+      },
+      "message": "coverage.experimentalAstAwareRemapping was removed in Vitest 4 (always on). Delete the option.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:coverage-all-extensions",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bcoverage\\s*:[\\s\\S]{0,500}?\\b(?:all|extensions)\\s*:"
+      },
+      "message": "coverage.all and coverage.extensions were removed in Vitest 4. Uncovered files are no longer included by default; adjust coverage include/exclude instead.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:vite-node-deps-module-directories",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "package.json",
+        ".env",
+        ".env.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bVITE_NODE_DEPS_MODULE_DIRECTORIES\\b"
+      },
+      "message": "VITE_NODE_DEPS_MODULE_DIRECTORIES was renamed to VITEST_MODULE_DIRECTORIES in Vitest 4. Update env vars and scripts.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:transform-mode",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\btransformMode\\b"
+      },
+      "message": "Custom environment transformMode was replaced by viteEnvironment in Vitest 4. Rename the option.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:deps-optimizer-web",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\boptimizer\\s*:[\\s\\S]{0,200}?\\bweb\\s*:|\\boptimizer\\.web\\b"
+      },
+      "message": "deps.optimizer.web was renamed to deps.optimizer.client in Vitest 4. Update the key.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:workspace",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.workspace.*",
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bdefineWorkspace\\s*\\(|(?<![.\\w])workspace\\s*:"
+      },
+      "message": "vitest.workspace.* / workspace / defineWorkspace were replaced by projects in Vitest 4. Migrate to the projects option.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:browser-provider-string",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bprovider\\s*:\\s*['\"](?:playwright|webdriverio|preview)['\"]"
+      },
+      "message": "browser.provider must be a provider object in Vitest 4, not a string. Use e.g. provider: playwright().",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:max-threads-forks",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\b(?:maxThreads|maxForks)\\b"
+      },
+      "message": "maxThreads and maxForks were replaced by maxWorkers in Vitest 4. Rename the option.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:vitest-max-threads-forks-env",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "package.json",
+        ".env",
+        ".env.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bVITEST_MAX_(?:THREADS|FORKS)\\b"
+      },
+      "message": "VITEST_MAX_THREADS / VITEST_MAX_FORKS were replaced by VITEST_MAX_WORKERS in Vitest 4. Update env vars.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:single-thread-fork",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\b(?:singleThread|singleFork)\\b"
+      },
+      "message": "singleThread / singleFork were removed in Vitest 4. Use maxWorkers: 1 with isolate: false instead.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:pool-options",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bpoolOptions\\b"
+      },
+      "message": "poolOptions was removed in Vitest 4. Move pool settings to top-level options (memoryLimit → vmMemoryLimit).",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:threads-use-atomics",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\buseAtomics\\b"
+      },
+      "message": "threads.useAtomics was removed in Vitest 4. Delete the option from pool/thread config.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:basic-reporter",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*",
+        "package.json"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "(?:--reporter(?:=|\\s+)|['\"])basic(?:['\"]|$)|\\breporters?\\s*:\\s*(?:\\[[^\\]]*['\"]basic['\"]|['\"]basic['\"])"
+      },
+      "message": "The basic reporter was removed in Vitest 4. Switch to default, verbose, or another built-in reporter.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:pool-match-globs",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bpoolMatchGlobs\\b"
+      },
+      "message": "poolMatchGlobs was removed in Vitest 4. Remove the option and configure pools via projects if needed.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:environment-match-globs",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\benvironmentMatchGlobs\\b"
+      },
+      "message": "environmentMatchGlobs was removed in Vitest 4. Remove the option and configure environments via projects if needed.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:deps-external-inline-fallback",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "(?<!server\\.)\\bdeps\\.(?:external|inline|fallbackCJS)\\b|(?<!server\\s*:\\s*\\{\\s*)\\bdeps\\s*:\\s*\\{[^}]{0,400}\\b(?:external|inline|fallbackCJS)\\b"
+      },
+      "message": "Top-level deps.external / deps.inline / deps.fallbackCJS moved to server.deps.* in Vitest 4. Nest them under server.deps.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:browser-tester-scripts",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\btesterScripts\\b"
+      },
+      "message": "browser.testerScripts was replaced by browser.testerHtmlPath in Vitest 4. Update the option.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:min-workers",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "config",
+      "files": [
+        "vitest.config.*",
+        "vite.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bminWorkers\\b"
+      },
+      "message": "minWorkers was removed in Vitest 4. Delete the option from the Vitest config.",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:vitest-executor",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "__vitest_executor"
+      },
+      "message": "__vitest_executor injection was replaced in Vitest 4.",
+      "fix_hint": "use moduleRunner",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1,
+      "fix": "Test runners inject `moduleRunner`."
+    },
+    {
+      "id": "vitest:3->4:vitest-execute",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "from ['\\\"]vitest/execute['\\\"]|require\\(['\\\"]vitest/execute['\\\"]\\)"
+      },
+      "message": "vitest/execute entry point was removed in Vitest 4.",
+      "fix_hint": "remove vitest/execute imports",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:browser-context-import",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "@vitest/browser/(context|utils)"
+      },
+      "message": "@vitest/browser/context|utils imports moved in Vitest 4.",
+      "fix_hint": "import from vitest/browser",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1,
+      "fix": "Import browser helpers from `vitest/browser`."
+    },
+    {
+      "id": "vitest:3->4:reporter-legacy-hooks",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bon(Collected|SpecsCollected|PathsCollected|TaskUpdate|Finished)\\b"
+      },
+      "message": "Legacy reporter hooks were removed in Vitest 4.",
+      "fix_hint": "migrate to Vitest 4 reporter APIs",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vitest:3->4:test-options-third-arg",
+      "package": "vitest",
+      "from_major": 3,
+      "to_major": 4,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx",
+        "*.test.ts",
+        "*.test.js",
+        "*.spec.ts",
+        "*.spec.js"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\b(test|it|describe)\\s*\\([^)]+,\\s*(?:async\\s*)?\\([^)]*\\)\\s*=>\\s*\\{[^}]*\\}\\s*,\\s*\\{"
+      },
+      "message": "test/describe options as third argument removed in Vitest 4.",
+      "fix_hint": "pass options as the second argument",
+      "source_url": "https://vitest.dev/guide/migration.html",
+      "pattern_version": 1,
+      "fix": "Options sit in the second argument of `test`/`describe` (e.g. `test('name', { retry: 2 }, fn)`)."
+    }
+  ]
+}

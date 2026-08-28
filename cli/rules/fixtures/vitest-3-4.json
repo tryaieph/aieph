@@ -1,0 +1,249 @@
+{
+  "migration_id": "vitest-3-to-4",
+  "package": "vitest",
+  "from_major": 3,
+  "to_major": 4,
+  "items": [
+    {
+      "id": "vitest:3->4:coverage-ignore-empty-lines",
+      "positive": [
+        "coverage: { ignoreEmptyLines: true }"
+      ],
+      "negative": [
+        "coverage: { provider: 'v8' }"
+      ]
+    },
+    {
+      "id": "vitest:3->4:coverage-experimental-ast-aware-remapping",
+      "positive": [
+        "coverage: { experimentalAstAwareRemapping: true }"
+      ],
+      "negative": [
+        "coverage: { reportsDirectory: './coverage' }"
+      ]
+    },
+    {
+      "id": "vitest:3->4:coverage-all-extensions",
+      "positive": [
+        "coverage: { all: true }",
+        "coverage: {\n  extensions: ['.ts', '.tsx']\n}"
+      ],
+      "negative": [
+        "coverage: { include: ['src/**'] }",
+        "extensions: ['.ts'] // not under coverage"
+      ]
+    },
+    {
+      "id": "vitest:3->4:vite-node-deps-module-directories",
+      "positive": [
+        "VITE_NODE_DEPS_MODULE_DIRECTORIES=node_modules"
+      ],
+      "negative": [
+        "VITEST_MODULE_DIRECTORIES=node_modules"
+      ]
+    },
+    {
+      "id": "vitest:3->4:transform-mode",
+      "positive": [
+        "transformMode: 'web'"
+      ],
+      "negative": [
+        "viteEnvironment: 'client'"
+      ]
+    },
+    {
+      "id": "vitest:3->4:deps-optimizer-web",
+      "positive": [
+        "deps: { optimizer: { web: { enabled: true } } }",
+        "deps.optimizer.web"
+      ],
+      "negative": [
+        "deps: { optimizer: { client: { enabled: true } } }",
+        "deps.optimizer.ssr"
+      ]
+    },
+    {
+      "id": "vitest:3->4:workspace",
+      "positive": [
+        "import { defineWorkspace } from 'vitest/config'\ndefineWorkspace(['packages/*'])",
+        "workspace: ['packages/*']"
+      ],
+      "negative": [
+        "projects: ['packages/*']",
+        "defineConfig({ test: { name: 'unit' } })"
+      ]
+    },
+    {
+      "id": "vitest:3->4:browser-provider-string",
+      "positive": [
+        "browser: { provider: 'playwright' }",
+        "provider: \"webdriverio\""
+      ],
+      "negative": [
+        "provider: playwright()",
+        "provider: { name: 'preview' }"
+      ]
+    },
+    {
+      "id": "vitest:3->4:max-threads-forks",
+      "positive": [
+        "maxThreads: 4",
+        "maxForks: 2"
+      ],
+      "negative": [
+        "maxWorkers: 4"
+      ]
+    },
+    {
+      "id": "vitest:3->4:vitest-max-threads-forks-env",
+      "positive": [
+        "VITEST_MAX_THREADS=4",
+        "VITEST_MAX_FORKS=2"
+      ],
+      "negative": [
+        "VITEST_MAX_WORKERS=4"
+      ]
+    },
+    {
+      "id": "vitest:3->4:single-thread-fork",
+      "positive": [
+        "singleThread: true",
+        "singleFork: true"
+      ],
+      "negative": [
+        "maxWorkers: 1, isolate: false"
+      ]
+    },
+    {
+      "id": "vitest:3->4:pool-options",
+      "positive": [
+        "poolOptions: { threads: { maxThreads: 4 } }"
+      ],
+      "negative": [
+        "pool: 'threads', maxWorkers: 4"
+      ]
+    },
+    {
+      "id": "vitest:3->4:threads-use-atomics",
+      "positive": [
+        "threads: { useAtomics: true }"
+      ],
+      "negative": [
+        "threads: { isolate: true }"
+      ]
+    },
+    {
+      "id": "vitest:3->4:basic-reporter",
+      "positive": [
+        "reporters: ['basic']",
+        "vitest --reporter=basic"
+      ],
+      "negative": [
+        "reporters: ['default']",
+        "vitest --reporter=verbose"
+      ]
+    },
+    {
+      "id": "vitest:3->4:pool-match-globs",
+      "positive": [
+        "poolMatchGlobs: [['**/*.js', 'vmThreads']]"
+      ],
+      "negative": [
+        "pool: 'vmThreads'"
+      ]
+    },
+    {
+      "id": "vitest:3->4:environment-match-globs",
+      "positive": [
+        "environmentMatchGlobs: [['**/*.tsx', 'jsdom']]"
+      ],
+      "negative": [
+        "environment: 'jsdom'"
+      ]
+    },
+    {
+      "id": "vitest:3->4:deps-external-inline-fallback",
+      "positive": [
+        "deps: { external: [/node_modules/] }",
+        "deps.inline"
+      ],
+      "negative": [
+        "server: { deps: { external: [/node_modules/] } }",
+        "server.deps.inline"
+      ]
+    },
+    {
+      "id": "vitest:3->4:browser-tester-scripts",
+      "positive": [
+        "browser: { testerScripts: ['./setup.js'] }"
+      ],
+      "negative": [
+        "browser: { testerHtmlPath: './tester.html' }"
+      ]
+    },
+    {
+      "id": "vitest:3->4:min-workers",
+      "positive": [
+        "minWorkers: 1"
+      ],
+      "negative": [
+        "maxWorkers: 4"
+      ]
+    },
+    {
+      "id": "vitest:3->4:vitest-executor",
+      "positive": [
+        "globalThis.__vitest_executor = runner",
+        "const x = __vitest_executor"
+      ],
+      "negative": [
+        "const runner = moduleRunner",
+        "import { moduleRunner } from 'vite'"
+      ]
+    },
+    {
+      "id": "vitest:3->4:vitest-execute",
+      "positive": [
+        "import { execute } from 'vitest/execute'",
+        "const x = require('vitest/execute')"
+      ],
+      "negative": [
+        "import { expect } from 'vitest'",
+        "import { execute } from 'some-other/execute'"
+      ]
+    },
+    {
+      "id": "vitest:3->4:browser-context-import",
+      "positive": [
+        "import { page } from '@vitest/browser/context'",
+        "import { getElementError } from '@vitest/browser/utils'"
+      ],
+      "negative": [
+        "import { page } from 'vitest/browser'",
+        "import { expect } from 'vitest'"
+      ]
+    },
+    {
+      "id": "vitest:3->4:reporter-legacy-hooks",
+      "positive": [
+        "onCollected(files) {}",
+        "class R { onSpecsCollected() {} onPathsCollected() {} onTaskUpdate() {} onFinished() {} }"
+      ],
+      "negative": [
+        "onTestRunEnd() {}",
+        "onTestModuleCollected() {}"
+      ]
+    },
+    {
+      "id": "vitest:3->4:test-options-third-arg",
+      "positive": [
+        "test('x', () => { expect(1).toBe(1) }, { timeout: 1000 })",
+        "describe('suite', () => {}, { concurrent: true })"
+      ],
+      "negative": [
+        "test('x', { timeout: 1000 }, () => { expect(1).toBe(1) })",
+        "it('y', async () => {})"
+      ]
+    }
+  ]
+}

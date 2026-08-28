@@ -1,0 +1,350 @@
+{
+  "migration_id": "vite-7-to-8",
+  "package": "vite",
+  "from_major": 7,
+  "to_major": 8,
+  "guide_url": "https://vite.dev/guide/migration",
+  "semantic_only_count": 10,
+  "rules": [
+    {
+      "id": "vite:7->8:esbuild-supported",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "config",
+      "files": [
+        "vite.config.*",
+        "vitest.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\besbuild\\s*:[\\s\\S]{0,400}?\\bsupported\\s*:"
+      },
+      "message": "esbuild.supported is not supported by Oxc in Vite 8. Remove it or migrate the equivalent Oxc/oxc option if available.",
+      "source_url": "https://vite.dev/guide/migration",
+      "pattern_version": 1
+    },
+    {
+      "id": "vite:7->8:property-mangling",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "config",
+      "files": [
+        "vite.config.*",
+        "vitest.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\b(?:mangleProps|reserveProps|mangleQuoted|mangleCache)\\b"
+      },
+      "message": "Property mangling options (mangleProps, reserveProps, mangleQuoted, mangleCache) are unsupported in Vite 8. Remove them from the minify/esbuild config.",
+      "source_url": "https://vite.dev/guide/migration",
+      "pattern_version": 1
+    },
+    {
+      "id": "vite:7->8:rollup-watch-chokidar",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "config",
+      "files": [
+        "vite.config.*",
+        "vitest.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\b(?:rollupOptions|rolldownOptions)\\b[\\s\\S]{0,300}?\\bwatch\\b[\\s\\S]{0,200}?\\bchokidar\\b"
+      },
+      "message": "build.rollupOptions.watch.chokidar was removed in Vite 8. Drop the chokidar watch options.",
+      "source_url": "https://vite.dev/guide/migration",
+      "pattern_version": 1
+    },
+    {
+      "id": "vite:7->8:manual-chunks-object",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "config",
+      "files": [
+        "vite.config.*",
+        "vitest.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bmanualChunks\\s*:\\s*\\{"
+      },
+      "message": "Object-form output.manualChunks is no longer supported in Vite 8. Use a function form instead.",
+      "source_url": "https://vite.dev/guide/migration",
+      "pattern_version": 1
+    },
+    {
+      "id": "vite:7->8:commonjs-options",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "config",
+      "files": [
+        "vite.config.*",
+        "vitest.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bcommonjsOptions\\b"
+      },
+      "message": "build.commonjsOptions is a no-op in Vite 8. Remove it from the Vite config.",
+      "source_url": "https://vite.dev/guide/migration",
+      "pattern_version": 1
+    },
+    {
+      "id": "vite:7->8:dynamic-import-vars-warn-on-error",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "config",
+      "files": [
+        "vite.config.*",
+        "vitest.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bdynamicImportVarsOptions\\b[\\s\\S]{0,200}?\\bwarnOnError\\b|\\bwarnOnError\\b[\\s\\S]{0,80}?\\bdynamicImportVarsOptions\\b"
+      },
+      "message": "build.dynamicImportVarsOptions.warnOnError is a no-op in Vite 8. Remove warnOnError from dynamicImportVarsOptions.",
+      "source_url": "https://vite.dev/guide/migration",
+      "pattern_version": 1
+    },
+    {
+      "id": "vite:7->8:format-system-amd",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "config",
+      "files": [
+        "vite.config.*",
+        "vitest.config.*"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bformat\\s*:\\s*['\"](?:system|amd)['\"]"
+      },
+      "message": "output.format values 'system' and 'amd' are no longer supported in Vite 8. Choose a supported format (es, cjs, iife, umd).",
+      "source_url": "https://vite.dev/guide/migration",
+      "pattern_version": 1
+    },
+    {
+      "id": "vite:7->8:transform-with-esbuild",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\btransformWithEsbuild\\b"
+      },
+      "message": "transformWithEsbuild requires optional esbuild in Vite 8.",
+      "fix_hint": "migrate to transformWithOxc or install esbuild",
+      "source_url": "https://vite.dev/guide/migration.html",
+      "pattern_version": 1,
+      "fix": "Prefer `transformWithOxc`; or install `esbuild` for `transformWithEsbuild`."
+    },
+    {
+      "id": "vite:7->8:build-catch-errors",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "from\\s*['\\\"]vite['\\\"][\\s\\S]{0,400}?catch\\s*\\([^)]*\\)\\s*\\{[^}]*console\\.error\\(\\s*\\w+\\s*\\)"
+      },
+      "message": "build() now throws BundleError with errors[] in Vite 8.",
+      "fix_hint": "read error.errors in catch",
+      "source_url": "https://vite.dev/guide/migration.html",
+      "pattern_version": 1,
+      "fix": "Read `.errors` on the thrown `BundleError`."
+    },
+    {
+      "id": "vite:7->8:hmr-accept-url",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx",
+        "*.vue",
+        "*.svelte"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "import\\.meta\\.hot\\.accept\\(\\s*(new\\s+URL|['\\\"][^'\\\"]+://)"
+      },
+      "message": "import.meta.hot.accept(URL) is unsupported in Vite 8.",
+      "fix_hint": "pass a module id string",
+      "source_url": "https://vite.dev/guide/migration.html",
+      "pattern_version": 1,
+      "fix": "`import.meta.hot.accept` takes a module id string."
+    },
+    {
+      "id": "vite:7->8:bundle-index-assign",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bbundle\\s*\\[[^\\]]+\\]\\s*="
+      },
+      "message": "Assigning to bundle[foo] in generateBundle/writeBundle is unsupported in Vite 8.",
+      "fix_hint": "avoid mutating bundle via index assignment",
+      "source_url": "https://vite.dev/guide/migration.html",
+      "pattern_version": 1,
+      "fix": "Emit assets with `this.emitFile()`."
+    },
+    {
+      "id": "vite:7->8:structured-clone-bundle",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "structuredClone\\(\\s*bundle\\s*\\)"
+      },
+      "message": "structuredClone(bundle) throws DataCloneError in Vite 8.",
+      "fix_hint": "do not structuredClone the Rollup bundle",
+      "source_url": "https://vite.dev/guide/migration.html",
+      "pattern_version": 1,
+      "fix": "Clone with `structuredClone({ ...bundle })`."
+    },
+    {
+      "id": "vite:7->8:should-transform-cached-module",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bshouldTransformCachedModule\\b"
+      },
+      "message": "shouldTransformCachedModule hook is unsupported in Vite 8.",
+      "fix_hint": "remove the hook",
+      "source_url": "https://vite.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vite:7->8:resolve-import-meta",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bresolveImportMeta\\b"
+      },
+      "message": "resolveImportMeta hook is unsupported in Vite 8.",
+      "fix_hint": "remove the hook",
+      "source_url": "https://vite.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vite:7->8:render-dynamic-import",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\brenderDynamicImport\\b"
+      },
+      "message": "renderDynamicImport hook is unsupported in Vite 8.",
+      "fix_hint": "remove the hook",
+      "source_url": "https://vite.dev/guide/migration.html",
+      "pattern_version": 1
+    },
+    {
+      "id": "vite:7->8:resolve-file-url",
+      "package": "vite",
+      "from_major": 7,
+      "to_major": 8,
+      "kind": "source",
+      "files": [
+        "*.ts",
+        "*.js",
+        "*.mjs",
+        "*.cjs",
+        "*.tsx",
+        "*.jsx"
+      ],
+      "detect": {
+        "type": "regex",
+        "value": "\\bresolveFileUrl\\b"
+      },
+      "message": "resolveFileUrl hook is unsupported in Vite 8.",
+      "fix_hint": "remove the hook",
+      "source_url": "https://vite.dev/guide/migration.html",
+      "pattern_version": 1
+    }
+  ]
+}

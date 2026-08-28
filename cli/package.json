@@ -1,0 +1,31 @@
+{
+  "name": "aieph",
+  "version": "0.1.0",
+  "private": true,
+  "description": "aieph CLI — local personal cross-agent memory (MCP), dependency major-version sync notes, and observe hooks",
+  "type": "module",
+  "bin": {
+    "aieph": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "rules"
+  ],
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "build": "tsc -p ./",
+    "prepack": "npm run build",
+    "sync": "node ./dist/index.js sync --cwd \"${INIT_CWD:-.}\""
+  },
+  "dependencies": {
+    "semver": "^7.6.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "@types/semver": "^7.5.8",
+    "typescript": "^5.6.3"
+  }
+}
