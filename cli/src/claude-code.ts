@@ -50,6 +50,7 @@ type MatcherGroup = {
 
 type ClaudeSettings = {
   hooks?: {
+    PreToolUse?: MatcherGroup[];
     PostToolUse?: MatcherGroup[];
     SessionStart?: MatcherGroup[];
     [event: string]: MatcherGroup[] | undefined;
@@ -222,6 +223,97 @@ export function uninstallClaudeCodeSessionStartHook(
   return base;
 }
 
+/** Stable marker identifying the aieph-managed PreToolUse cache hook. */
+export const AIEPH_CACHE_MARKER = "aieph cache-hook";
+
+export const AIEPH_CACHE_MATCHER = "WebSearch|WebFetch";
+
+/**
+ * PreToolUse command: ask the shared aieph cache before a web lookup. Fail-open —
+ * a missing `aieph`, a miss, a timeout, or any error simply passes through so the
+ * original WebSearch/WebFetch runs untouched.
+ */
+export const AIEPH_CACHE_COMMAND =
+  'command -v aieph >/dev/null 2>&1 && aieph cache-hook; exit 0';
+
+export function isAiephCacheHandler(h: HookHandler): boolean {
+  if (typeof h.command !== "string") return false;
+  return h.command.includes(AIEPH_CACHE_MARKER);
+}
+
+export function aiephCacheHandler(): HookHandler {
+  return { type: "command", command: AIEPH_CACHE_COMMAND };
+}
+
+/** Merge the aieph PreToolUse cache hook without touching other hooks/groups. */
+export function mergeClaudeCodePreToolUseHook(
+  existing: ClaudeSettings | null,
+): ClaudeSettings {
+  const base: ClaudeSettings =
+    existing && typeof existing === "object" ? { ...existing } : {};
+  const hooks = { ...(base.hooks ?? {}) };
+  const pre: MatcherGroup[] = Array.isArray(hooks.PreToolUse)
+    ? hooks.PreToolUse.map((g) => ({
+        ...g,
+        hooks: Array.isArray(g.hooks) ? [...g.hooks] : [],
+      }))
+    : [];
+
+  let group = pre.find(
+    (g) => g.matcher === AIEPH_CACHE_MATCHER && Array.isArray(g.hooks),
+  );
+  if (!group) {
+    group = { matcher: AIEPH_CACHE_MATCHER, hooks: [] };
+    pre.push(group);
+  }
+  const handlers = group.hooks ?? [];
+  const withoutAieph = handlers.filter((h) => !isAiephCacheHandler(h));
+  group.hooks = [...withoutAieph, aiephCacheHandler()];
+
+  hooks.PreToolUse = pre;
+  base.hooks = hooks;
+  return base;
+}
+
+/** Remove only the aieph PreToolUse cache hook; leave other entries intact. */
+export function uninstallClaudeCodePreToolUseHook(
+  existing: ClaudeSettings | null,
+): ClaudeSettings | null {
+  if (!existing || typeof existing !== "object") return existing;
+  if (!existing.hooks || !Array.isArray(existing.hooks.PreToolUse)) {
+    return existing;
+  }
+
+  const base: ClaudeSettings = { ...existing };
+  const hooks = { ...base.hooks };
+  const pre = hooks.PreToolUse ?? [];
+  const nextPre: MatcherGroup[] = [];
+  for (const g of pre) {
+    const handlers = Array.isArray(g.hooks) ? g.hooks : [];
+    const kept = handlers.filter((h) => !isAiephCacheHandler(h));
+    if (kept.length === 0 && g.matcher === AIEPH_CACHE_MATCHER) {
+      continue;
+    }
+    if (kept.length !== handlers.length) {
+      nextPre.push({ ...g, hooks: kept });
+    } else {
+      nextPre.push(g);
+    }
+  }
+  if (nextPre.length === 0) {
+    const { PreToolUse: _drop, ...rest } = hooks;
+    base.hooks = Object.keys(rest).length > 0 ? rest : undefined;
+    if (base.hooks === undefined) {
+      const { hooks: _h, ...root } = base;
+      return Object.keys(root).length > 0 ? root : {};
+    }
+    return base;
+  }
+  hooks.PreToolUse = nextPre;
+  base.hooks = hooks;
+  return base;
+}
+
 export async function installClaudeCodeHooks(cwd: string): Promise<void> {
   const dir = path.join(cwd, ".claude");
   const file = path.join(dir, "settings.json");
@@ -235,7 +327,9 @@ export async function installClaudeCodeHooks(cwd: string): Promise<void> {
       existing = {};
     }
   }
-  const next = mergeClaudeCodeSessionStartHook(mergeClaudeCodeSettings(existing));
+  const next = mergeClaudeCodePreToolUseHook(
+    mergeClaudeCodeSessionStartHook(mergeClaudeCodeSettings(existing)),
+  );
   await mkdir(dir, { recursive: true });
   await writeFile(file, JSON.stringify(next, null, 2) + "\n", "utf8");
 }
@@ -249,7 +343,9 @@ export async function uninstallClaudeCodeHooks(cwd: string): Promise<void> {
   const existing = JSON.parse(trimmed) as ClaudeSettings;
   const afterPostToolUse = uninstallClaudeCodeSettings(existing);
   if (afterPostToolUse === null) return;
-  const next = uninstallClaudeCodeSessionStartHook(afterPostToolUse);
+  const afterSessionStart = uninstallClaudeCodeSessionStartHook(afterPostToolUse);
+  if (afterSessionStart === null) return;
+  const next = uninstallClaudeCodePreToolUseHook(afterSessionStart);
   if (next === null) return;
   await writeFile(file, JSON.stringify(next, null, 2) + "\n", "utf8");
 }

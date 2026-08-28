@@ -7,6 +7,7 @@ import { runSync } from "./sync.js";
 import { runInit } from "./init.js";
 import { runObserve } from "./observe-cmd.js";
 import { runUninstall } from "./uninstall.js";
+import { runCacheHook } from "./cache-hook.js";
 import { extractCursorFilePath } from "./cursor.js";
 import { runStdioServer } from "./memory/server.js";
 import { formatReviewHint } from "./memory/review-hint.js";
@@ -103,6 +104,16 @@ async function main(): Promise<void> {
       console.error((e as Error).message ?? String(e));
       process.exit(1);
     }
+  }
+
+  if (args.command === "cache-hook") {
+    // Fail-open PreToolUse hook: never throw, never block on any failure.
+    try {
+      await runCacheHook();
+    } catch {
+      // swallow — a broken cache lookup must never block the tool call
+    }
+    process.exit(0);
   }
 
   if (args.command === "observe") {

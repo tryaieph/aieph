@@ -9,6 +9,7 @@ Usage:
   aieph uninstall [--yes] [--cwd <path>]
   aieph memory serve [--cwd <path>]
   aieph memory review-hint [--cwd <path>] [--stale-after-days <n>]
+  aieph cache-hook
 
 Options:
   --dry-run         Print .aieph/versions.md to stdout; do not write
@@ -38,6 +39,12 @@ Options:
                     Claude Code SessionStart hook so the model sees the hint as
                     context at the start of the next session and can call
                     memory.review + memory.verify to check them.
+
+  cache-hook        Claude Code PreToolUse hook (WebSearch|WebFetch): serves an
+                    answer from the shared aieph cache on a hit, and stays out of
+                    the way (fail-open) on any miss/timeout/error. Registered
+                    automatically by \`aieph init --claude-code\`; reads the hook
+                    JSON on stdin. Env: AIEPH_API_BASE, LOOKUP_TIMEOUT_MS.
 
 Note: git hooks installed by \`aieph init\` run with --quiet --no-write --send.
 経路: hook=イベントのみ / 手動=書き込み+イベント / CI=check のみ
