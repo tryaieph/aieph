@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
-  "name": "io.github.tryaieph/aieph",
+  "name": "dev.aieph/aieph",
   "description": "Shared knowledge cache for AI coding agents — reuse an answer once it exists.",
   "repository": {
     "url": "https://github.com/tryaieph/aieph",
